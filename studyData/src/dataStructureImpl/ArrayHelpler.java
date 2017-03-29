@@ -1,6 +1,6 @@
-package dataStructureHelpler;
+package dataStructureImpl;
 
-public class ArrayHelper {
+public class ArrayHelpler {
 	private Object[] dataArray;
 	private int count;
 
@@ -8,14 +8,14 @@ public class ArrayHelper {
 	 * 지정한 사이즈의 배열을 생성
 	 * @param maxSize : 생성할 배열의 크기 - 음수일 경우 예외발생 
 	 */
-	public ArrayHelper(int maxSize) {
+	public ArrayHelpler(int maxSize) {
 		if (maxSize < 0) throw new IllegalArgumentException("Illegal Size : " + maxSize);
 		
 		this.dataArray = new Object[maxSize];
 		this.count = 0;
 	}
 	
-	public ArrayHelper() {
+	public ArrayHelpler() {
 		try {
 			throw new Exception("need ArraySize");
 		} catch (Exception e) {
