@@ -87,5 +87,11 @@ public class RegexHelper {
 					"^\\d{6}[1-4]\\d{6}", str);
 		return result;
 	}
-	// ----- 싱글톤 객체 생성을 위한 준비 끝 -----
+	public boolean isURL(String str) {
+		boolean result = false;
+		if(isValue(str))
+			result = Pattern.matches(
+					"^(https?://)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([/\\w_\\.-]*)*/?$", str);
+		return result;
+	}
 }
