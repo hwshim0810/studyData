@@ -1,6 +1,7 @@
 # Programming Practice
 
-* Data Structure
-* Designpattern
-* Programming Language
-* Regular expression
+- Data Structure
+- Design Pattern
+- Programming Language
+- Regular expression
+- TDD
