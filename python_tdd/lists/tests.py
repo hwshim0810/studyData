@@ -1,6 +1,9 @@
 from django.test import TestCase
+from django.core.urlresolvers import resolve
+from lists.views import index
 
 
-class ExTest(TestCase):
-    def test_ex_sum(self):
-        self.assertEqual(1 + 1, 3)
+class IndexPageTest(TestCase):
+    def test_root_url_resolves_to_index_view(self):
+        found = resolve('/')
+        self.assertEqual(found.func, index)
