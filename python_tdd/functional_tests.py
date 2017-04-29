@@ -30,8 +30,9 @@ class NewVisitorTest(unittest.TestCase):
     # Test-story 에 맞추어 작성
     # ...
 
-    # import 가 아닌 Cmd 를 통함 unittest.main() 호출(Test Class 와 Method 를 찾아 실행)
-    if __name__ == '__main__':
-        # 불필요한 리소스 경고 제거
-        unittest.main(warnings='ignore')
+
+# import 가 아닌 Cmd 를 통함 unittest.main() 호출(Test Class 와 Method 를 찾아 실행)
+if __name__ == '__main__':
+    # 불필요한 리소스 경고 제거
+    unittest.main(warnings='ignore')
 
