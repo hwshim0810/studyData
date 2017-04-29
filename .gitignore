@@ -1,0 +1,16 @@
+# IDE config
+.idea
+
+# pyenv
+.python-version
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Eclipse
+.classpath
+.project
+.settings
+bin/
