@@ -1,6 +1,9 @@
 # IDE config
 .idea
 
+# Key
+key.json
+
 # pyenv
 .python-version
 
