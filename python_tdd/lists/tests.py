@@ -20,36 +20,6 @@ class IndexPageTest(TestCase):
     
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_index_page_can_save_a_POST_request(self):
-        # 단위 테스트의 구성
-        # setup
-        req = HttpRequest()
-        req.method = 'POST'
-        req.POST['task'] = '신규 작업 아이템'
-
-        # exercise
-        response = index(req)
-
-        # assert
-        # objects.all().count() 의 축약, 저장된 것을 확인
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, '신규 작업 아이템')
-
-    def test_index_page_redirects_after_POST(self):
-        req = HttpRequest()
-        req.method = 'POST'
-        req.POST['task'] = '신규 작업 아이템'
-
-        response = index(req)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/lists/the-only-one/')
-
-    def test_index_page_only_saves_item_when_necessary(self):
-        index(HttpRequest())
-        self.assertEqual(Item.objects.count(), 0)
-
 
 class ItemModelTest(TestCase):
     def test_saving_and_retrieving_items(self):
@@ -84,3 +54,27 @@ class ListViewTest(TestCase):
         # assertIn/response.content.decode() 를 대신함
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
+
+
+class NewListTest(TestCase):
+    def test_saving_a_POST_request(self):
+        # setup
+        # 꼬리 '/'를 사용하지 않는 경우는 DB에 변경을 가하는 액션 URL 인 경우
+        self.client.post(
+            '/lists/new',
+            data={'task': '신규 작업 아이템'}
+        )
+
+        # assert
+        # objects.all().count() 의 축약, 저장된 것을 확인
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, '신규 작업 아이템')
+
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/lists/new',
+            data={'task': '신규 작업 아이템'}
+        )
+
+        self.assertRedirects(response, '/lists/the-only-one/')
