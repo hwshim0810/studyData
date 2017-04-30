@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
+from django.template.loader import render_to_string
 from django.http import HttpRequest
 
 from lists.views import index
@@ -13,7 +14,6 @@ class IndexPageTest(TestCase):
     def test_index_page_returns_correct_html(self):
         response = index(HttpRequest())
 
-        # response.content 는 byte type 이라서 b''를 사용
-        self.assertTrue(response.content.startswith(b'<html>'))
-        self.assertIn(b'<title>To-Do lists</title>', response.content)
-        self.assertTrue(response.content.endswith(b'</html>'))
+        # 상수가 아닌 템플릿을 이용한 테스트로 변경
+        expected_html = render_to_string('lists/index.html')
+        self.assertEqual(response.content.decode(), expected_html)
