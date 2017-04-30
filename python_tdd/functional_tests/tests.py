@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
 import unittest
 
 
@@ -8,7 +9,7 @@ import unittest
 # assert 'To-Do' in browser.title, "Browser title was " + browser.title
 
 # 상속을 통한 Test class 생성
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     # Test 전 호출
     def setUp(self):
@@ -27,7 +28,7 @@ class NewVisitorTest(unittest.TestCase):
 
     # test~로 명명한 test Method
     def test_can_start_a_list(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # 웹 페이지 타이틀과 헤더가 'To-Do'를 표시
         self.assertIn('To-Do', self.browser.title)
@@ -65,8 +66,10 @@ class NewVisitorTest(unittest.TestCase):
         # ...
 
 
-# import 가 아닌 Cmd 를 통함 unittest.main() 호출(Test Class 와 Method 를 찾아 실행)
-if __name__ == '__main__':
-    # 불필요한 리소스 경고 제거
-    unittest.main(warnings='ignore')
+# LiveServerTestCase 의 이용으로 test 명령어로 시작 가능
+
+# # import 가 아닌 Cmd 를 통함 unittest.main() 호출(Test Class 와 Method 를 찾아 실행)
+# if __name__ == '__main__':
+#     # 불필요한 리소스 경고 제거
+#     unittest.main(warnings='ignore')
 
