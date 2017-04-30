@@ -20,6 +20,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     # test~로 명명한 test Method
     def test_can_start_a_list(self):
         self.browser.get('http://localhost:8000')
@@ -39,17 +44,22 @@ class NewVisitorTest(unittest.TestCase):
         # "공구 사기"라고 텍스트박스에 입력
         input_box.send_keys('공구 사기')
 
-        # Enter key 입력 시 페이지 갱신 및 작업목록에 '공구 사기' 추가됨
+        # Enter key 입력 시 페이지 갱신 및 작업목록에 '1: 공구 사기' 추가됨
+        input_box.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: 공구 사기')
+
+        # 추가 입력 텍스트박스가 존재
+        # 다시 추가작업 입력 '공구를 이용하여 조립'
+        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box.send_keys('공구를 이용하여 조립')
         input_box.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: 공구 사기' for row in rows),
-            '신규 작업이 Table 에 표시되지 않음'
-        )
+        # 페이지 재 갱신후, 두개의 작업 출력
+        self.check_for_row_in_list_table('2: 공구를 이용하여 조립')
+        self.check_for_row_in_list_table('1: 공구 사기')
 
-        self.fail('Finish the test') # 강제로 Test 실패 발생
+        # 강제로 Test 실패 발생
+        self.fail('Finish the test')
 
         # Test-story 에 맞추어 작성
         # ...
