@@ -46,6 +46,7 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
             any(row.text == '1: 공구 사기' for row in rows),
+            '신규 작업이 Table 에 표시되지 않음'
         )
 
         self.fail('Finish the test') # 강제로 Test 실패 발생
