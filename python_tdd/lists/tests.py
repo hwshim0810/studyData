@@ -6,6 +6,7 @@ from django.http import HttpRequest
 from lists.views import index
 from lists.models import Item
 
+
 class IndexPageTest(TestCase):
     def test_root_url_resolves_to_index_view(self):
         found = resolve('/')
@@ -22,20 +23,41 @@ class IndexPageTest(TestCase):
     def test_index_page_can_save_a_POST_request(self):
         # 단위 테스트의 구성
         # setup
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['item_next'] = '신규 작업 아이템'
+        req = HttpRequest()
+        req.method = 'POST'
+        req.POST['task'] = '신규 작업 아이템'
 
         # exercise
-        response = index(request)
+        response = index(req)
 
         # assert
-        # self.assertIn('신규 작업 아이템', response.content.decode())
-        expected_html = render_to_string(
-            'lists/index.html',
-            {'new_item_text': '신규 작업 아이템'},
-        )
-        self.assertEqual(response.content.decode(), expected_html)
+        # objects.all().count() 의 축약, 저장된 것을 확인
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, '신규 작업 아이템')
+
+    def test_index_page_redirects_after_POST(self):
+        req = HttpRequest()
+        req.method = 'POST'
+        req.POST['task'] = '신규 작업 아이템'
+
+        response = index(req)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_index_page_only_saves_item_when_necessary(self):
+        index(HttpRequest())
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_index_page_displays_all_list_items(self):
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = index(HttpRequest())
+
+        self.assertIn('itemey 1', response.content.decode())
+        self.assertIn('itemey 2', response.content.decode())
 
 
 class ItemModelTest(TestCase):
