@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import unittest
 
 
@@ -9,7 +9,7 @@ import unittest
 # assert 'To-Do' in browser.title, "Browser title was " + browser.title
 
 # 상속을 통한 Test class 생성
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
     # Test 전 호출
     def setUp(self):
@@ -19,6 +19,7 @@ class NewVisitorTest(LiveServerTestCase):
 
     # Test 후 호출 : 예외시에도 실행
     def tearDown(self):
+        self.browser.refresh()
         self.browser.quit()
 
     def check_for_row_in_list_table(self, row_text):
