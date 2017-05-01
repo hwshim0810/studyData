@@ -31,7 +31,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
 
         # 웹 페이지 타이틀과 헤더가 'To-Do'를 표시
-        self.assertIn('To-Do', self.browser.title)
+        self.assertIn('To-Do lists', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('작업 목록 시작', header_text)
 
@@ -97,6 +97,19 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Test-story 에 맞추어 작성
         # ...
+
+    def test_layout_and_styling(self):
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # 입력상자의 가운데 배치 확인
+        input_box = self.browser.find_element_by_id('id_new_item')
+        # +- 10의 반올림 처리
+        self.assertAlmostEqual(
+            input_box.location['x'] + input_box.size['width'] / 2,
+            512,
+            delta=10
+        )
 
 
 # LiveServerTestCase 의 이용으로 test 명령어로 시작 가능
