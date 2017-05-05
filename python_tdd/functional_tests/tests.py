@@ -24,7 +24,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     # Test 전 호출
     def setUp(self):
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
         # 대기 후 처리
         self.browser.implicitly_wait(2)
 
