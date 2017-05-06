@@ -25,9 +25,9 @@ BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__fil
 SECRET_KEY = get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['tdd.lazylife.ml']
 
 
 # Application definition
