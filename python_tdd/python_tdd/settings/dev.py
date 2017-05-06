@@ -8,3 +8,5 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, '../python_tdd_database/db.sqlite3'),
     }
 }
+
+ALLOWED_HOSTS = ['tdd.lazylife.ml']
