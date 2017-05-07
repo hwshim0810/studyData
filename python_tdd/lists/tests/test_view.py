@@ -79,6 +79,17 @@ class ListViewTest(TestCase):
 
         self.assertEqual(response.context['list'], correct_list)
 
+    def test_validation_errors_end_up_on_lists_page(self):
+        list_ = List.objects.create()
+        res = self.client.post(
+            '/lists/%d/' % (list_.id,),
+            data={'task': ''}
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertTemplateUsed(res, 'lists/list.html')
+        expected_err = "빈 아이템 리스트를 기질 수 없다"
+        self.assertContains(res, expected_err)
+
 
 class NewListTest(TestCase):
     def test_saving_a_POST_request(self):

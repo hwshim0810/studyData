@@ -10,10 +10,16 @@ def index(request):
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
-    if request.method =='POST':
-        Item.objects.create(text=request.POST.get('task', False), list=list_)
-        return redirect('/lists/%d/' % (list_.id,))
-    return render(request, 'lists/list.html', {'list': list_})
+    error = None
+    if request.method == 'POST':
+        try:
+            item = Item.objects.create(text=request.POST.get('task', False), list=list_)
+            item.full_clean()
+            item.save()
+            return redirect('/lists/%d/' % (list_.id,))
+        except ValidationError:
+            error = "빈 아이템 리스트를 기질 수 없다"
+    return render(request, 'lists/list.html', {'list': list_, 'error': error})
 
 
 def new_list(request):
@@ -25,6 +31,6 @@ def new_list(request):
     except ValidationError:
         list_.delete()
         error = "빈 아이템 리스트를 기질 수 없다"
-        return render(request, 'lists/index.html', {"error": error})
+        return render(request, 'lists/index.html', {'error': error})
     return redirect('/lists/%d/' % (list_.id,))
 
