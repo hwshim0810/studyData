@@ -16,7 +16,7 @@ def view_list(request, list_id):
             item = Item.objects.create(text=request.POST.get('task', False), list=list_)
             item.full_clean()
             item.save()
-            return redirect('/lists/%d/' % (list_.id,))
+            return redirect(list_)
         except ValidationError:
             error = "빈 아이템 리스트를 기질 수 없다"
     return render(request, 'lists/list.html', {'list': list_, 'error': error})
@@ -32,5 +32,6 @@ def new_list(request):
         list_.delete()
         error = "빈 아이템 리스트를 기질 수 없다"
         return render(request, 'lists/index.html', {'error': error})
-    return redirect('/lists/%d/' % (list_.id,))
+    # obj 의 전달로 특수 method 를 호출함
+    return redirect(list_)
 

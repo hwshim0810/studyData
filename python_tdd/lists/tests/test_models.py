@@ -41,3 +41,7 @@ class ListAndItemModelsTest(TestCase):
             # django model 이 저장처리 유효성 검사를 못함 (여기선 에러가 나긴 하지만 SQLite 의 문제)
             # 그래서 model 의 수동 유효성 검사처리
             item.full_clean()
+
+    def test_get_absolute_url(self):
+        list_ = List.objects.create()
+        self.assertEqual(list_.get_absolute_url(), '/lists/%d/' % (list_.id,))
