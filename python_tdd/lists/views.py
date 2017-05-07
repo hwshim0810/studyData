@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.core.exceptions import ValidationError
 
 from lists.models import Item, List
 
@@ -15,11 +15,18 @@ def view_list(request, list_id):
 
 def new_list(request):
     list_ = List.objects.create()
-    Item.objects.create(text=request.POST['task'], list=list_)
+    item = Item.objects.create(text=request.POST.get('task', False), list=list_)
+    try:
+        item.full_clean()
+        item.save()
+    except ValidationError:
+        list_.delete()
+        error = "빈 아이템 리스트를 기질 수 없다"
+        return render(request, 'lists/index.html', {"error": error})
     return redirect('/lists/%d/' % (list_.id,))
 
 
 def add_item(request, list_id):
     list_ = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST['item_text'], list=list_)
+    Item.objects.create(text=request.POST.get('item_text', False), list=list_)
     return redirect('/lists/%d/' % (list_.id,))
