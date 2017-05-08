@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 
 from lists.models import Item, List
+from lists.forms import ItemForm
 
 
 def index(request):
-    return render(request, 'lists/index.html')
+    return render(request, 'lists/index.html', {'form': ItemForm})
 
 
 def view_list(request, list_id):
@@ -19,6 +20,7 @@ def view_list(request, list_id):
             return redirect(list_)
         except ValidationError:
             error = "빈 아이템 리스트를 기질 수 없다"
+            return render(request, 'lists/index.html', {'error': error})
     return render(request, 'lists/list.html', {'list': list_, 'error': error})
 
 

@@ -14,7 +14,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('작업 목록 시작', header_text)
 
         # 작업을 추가
-        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box = self.get_item_input_box()
         self.assertEqual(
             input_box.get_attribute('placeholder'),
             '작업 입력'
@@ -33,7 +33,7 @@ class NewVisitorTest(FunctionalTest):
 
         # 추가 입력 텍스트박스가 존재
         # 다시 추가작업 입력 '공구를 이용하여 조립'
-        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box = self.get_item_input_box()
         input_box.send_keys('공구를 이용하여 조립')
         input_box.send_keys(Keys.ENTER)
 
@@ -56,7 +56,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn('공구를 이용하여 조립', page_text)
 
         # 새로운 사용자가 새로운 작업을 입력
-        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box = self.get_item_input_box()
         input_box.send_keys('물통 구입')
         input_box.send_keys(Keys.ENTER)
 

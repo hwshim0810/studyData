@@ -1,24 +1,21 @@
 from django.test import TestCase
-from django.core.urlresolvers import resolve
-from django.template.loader import render_to_string
-from django.http import HttpRequest
 
-from lists.views import index
 from lists.models import Item, List
+from lists.forms import ItemForm
 
 
 class IndexPageTest(TestCase):
-    def test_root_url_resolves_to_index_view(self):
-        found = resolve('/')
-        self.assertEqual(found.func, index)
+    # def test_root_url_resolves_to_index_view(self):
+    #     found = resolve('/')
+    #     self.assertEqual(found.func, index)
 
-    def test_index_page_returns_correct_html(self):
-        response = index(HttpRequest())
+    def test_index_page_renders_index_template(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'lists/index.html')
 
-        # 상수가 아닌 템플릿을 사용한 테스트
-        expected_html = render_to_string('lists/index.html')
-    
-        self.assertEqual(response.content.decode(), expected_html)
+    def test_index_page_uses_item_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.content['form'], ItemForm)
 
 
 class ListViewTest(TestCase):

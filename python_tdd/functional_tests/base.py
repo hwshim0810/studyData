@@ -36,6 +36,9 @@ class FunctionalTest(StaticLiveServerTestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
+    def get_item_input_box(self):
+        return self.browser.find_element_by_id('id_text')
+
 # LiveServerTestCase 의 이용으로 test 명령어로 시작 가능
 
 # # import 가 아닌 Cmd 를 통함 unittest.main() 호출(Test Class 와 Method 를 찾아 실행)

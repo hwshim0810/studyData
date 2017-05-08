@@ -7,7 +7,7 @@ class LayoutAndStylingTest(FunctionalTest):
         self.browser.set_window_size(1024, 768)
 
         # 입력상자의 가운데 배치 확인
-        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box = self.get_item_input_box()
         # +- 10의 반올림 처리
         self.assertAlmostEqual(
             input_box.location['x'] + input_box.size['width'] / 2,
