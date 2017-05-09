@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from lists.models import Item, List
-from lists.forms import ItemForm
+from lists.forms import ItemForm, EMPTY_LIST_ERROR
 
 
 class IndexPageTest(TestCase):
@@ -83,9 +83,38 @@ class ListViewTest(TestCase):
             data={'task': ''}
         )
         self.assertEqual(res.status_code, 200)
-        self.assertTemplateUsed(res, 'lists/list.html')
+        self.assertTemplateUsed(res, 'lists/index.html')
         expected_err = "빈 아이템 리스트를 기질 수 없다"
         self.assertContains(res, expected_err)
+
+    def test_displays_item_form(self):
+        list_ = List.objects.create()
+        res = self.client.get('/lists/%d' % (list_.id,))
+        self.assertIsInstance(res.content['form'], ItemForm)
+        self.assertContains(res, 'name="task"')
+
+    def post_invalid_input(self):
+        list_ = List.objects.create()
+        return self.client.post(
+            '/lists/%d/' % (list_.id,),
+            data={'task': ''}
+        )
+
+    def test_for_invalid_input_noting_saved_to_db(self):
+        self.post_invalid_input()
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_for_invalid_input_renders_lists_template(self):
+        res = self.post_invalid_input()
+        self.assertTemplateUsed(res, 'lists/list.html')
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        res = self.post_invalid_input()
+        self.assertIsInstance(res.context['form'], ItemForm)
+
+    def test_for_invalid_input_shows_error_on_page(self):
+        res = self.post_invalid_input()
+        self.assertContains(res, EMPTY_LIST_ERROR)
 
 
 class NewListTest(TestCase):
@@ -115,10 +144,16 @@ class NewListTest(TestCase):
         res = self.client.post('/lists/new', data={'task': ''})
         self.assertEqual(res.status_code, 200)
         self.assertTemplateUsed(res, 'lists/index.html')
-        expected_err = "빈 아이템 리스트를 기질 수 없다"
-        self.assertContains(res, expected_err)
 
     def test_invalid_list_items_arent_saved(self):
         self.client.post('/lists/new', data={'task': ''})
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
+
+    # def test_validation_errors_are_shown_on_index_page(self):
+    #     res = self.client.post('/lists/new', data={'text': ''})
+    #     self.assertContains(res, EMPTY_LIST_ERROR)
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        res = self.client.post('/lists/new', data={'text': ''})
+        self.assertIsInstance(res.content['form'], ItemForm)
