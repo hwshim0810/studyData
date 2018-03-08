@@ -1,5 +1,6 @@
 # IDE config
 .idea
+*.iml
 
 # Key
 key.json
